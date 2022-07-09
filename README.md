@@ -1,94 +1,89 @@
+# Ecommerce Shop Microservice
 
+An example project to learn about microservices
 
-# EcomMicroservices
+### TODO:
 
-This project was generated using [Nx](https://nx.dev).
+- [x] Add authentication
+  - [x] Authenticate the `create order` api
+  - [x] Authenticate the `order_created` event
+- [x] Create api in `billing` service to complete the payment
+- [x] Create a service to make delivery
+  - [x] The delivery service listens for `payment_made` event and then sends a notification to the customer.
+  - [x] Order service will also listen for `payment_made` event and it will update the order_status of the order to `delivered` when it occurs.
+- [ ] Implement `api gateway` to make the services available to the public
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+## Architecture
 
-🔎 **Smart, Fast and Extensible Build System**
+![Architecture diagram](https://github.com/baijanathTharu/ecommerce-microservices/blob/main/architecture.png?raw=true)
 
-## Adding capabilities to your workspace
+## Setup the project
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+- Clone the repo
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+  ```sh
+  git clone https://github.com/baijanathTharu/ecommerce-microservices.git
+  ```
 
-Below are our core plugins:
+- Install the dependencies
 
-- [React](https://reactjs.org)
-  - `npm install --save-dev @nrwl/react`
-- Web (no framework frontends)
-  - `npm install --save-dev @nrwl/web`
-- [Angular](https://angular.io)
-  - `npm install --save-dev @nrwl/angular`
-- [Nest](https://nestjs.com)
-  - `npm install --save-dev @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `npm install --save-dev @nrwl/express`
-- [Node](https://nodejs.org)
-  - `npm install --save-dev @nrwl/node`
+  ```sh
+  npm install
+  ```
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+- Start the `mysql` database and the `rabbitmq` message broker
 
-## Generate an application
+  ```
+  docker-compose up -d -V
+  ```
 
-Run `nx g @nrwl/react:app my-app` to generate an application.
+- Run the migrations for the database
 
-> You can use any of the plugins above to generate applications as well.
+  - Migration for `auth-model`
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+    ```sh
+    npx prisma migrate --schema libs/prisma-clients/auth-model/prisma/schema.prisma
+    ```
 
-## Generate a library
+  - Migration for `orders-model`
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
+    ```sh
+    npx prisma migrate --schema libs/prisma-clients/orders-model/prisma/schema.prisma
+    ```
 
-> You can also use any of the plugins above to generate libraries as well.
+  - Migration for `billing-model`
 
-Libraries are shareable across libraries and applications. They can be imported from `@ecom-microservices/mylib`.
+    ```sh
+    npx prisma migrate --schema libs/prisma-clients/billing-model/prisma/schema.prisma
+    ```
 
-## Development server
+- Run the services
+  - Run the `orders` service
+    ```sh
+    nx run orders:serve
+    ```
+  - Run the `billing` service
+    ```sh
+    nx run billing:serve
+    ```
+  - Run the `delivery` service
+    ```sh
+    nx run delivery:serve
+    ```
+  - Run the `auth` service
+    ```sh
+    nx run auth:serve
+    ```
 
-Run `nx serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+## How does this work?
 
-## Code scaffolding
+- Create order at first in `order` service.
+- Order service emits an event `order_created` to the `billing` service.
+- Billing service creates a bill for the order.
+- Make a payment in `billing` service and then emit an event `payment_made` to the `delivery` service and `order` service.
+- Delivery service sends a notification to the customer.
+- Order service updates the order status to `delivered`.
 
-Run `nx g @nrwl/react:component my-component --project=my-app` to generate a new component.
+## Postman Documentation of api's
 
-## Build
-
-Run `nx build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `nx test my-app` to execute the unit tests via [Jest](https://jestjs.io).
-
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `nx e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+[Documentation](https://documenter.getpostman.com/view/11936550/UzBqojzt)
