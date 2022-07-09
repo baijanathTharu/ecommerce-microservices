@@ -9,6 +9,7 @@
   },
   "private": true,
   "dependencies": {
+    "@prisma/client": "^4.0.0",
     "fastify": "^4.2.0",
     "tslib": "^2.3.0"
   },
@@ -30,6 +31,7 @@
     "jest": "27.5.1",
     "nx": "14.4.2",
     "prettier": "^2.6.2",
+    "prisma": "^4.0.0",
     "ts-jest": "27.1.4",
     "ts-node": "~10.8.0",
     "typescript": "~4.7.2"
