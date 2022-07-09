@@ -5,7 +5,13 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "p-migrate:dev:orders": "yarn prisma migrate dev --schema libs/prisma-clients/orders-model/prisma/schema.prisma",
+    "p-generate:orders": "yarn prisma generate --schema libs/prisma-clients/orders-model/prisma/schema.prisma",
+    "p-migrate:dev:billing": "yarn prisma migrate dev --schema libs/prisma-clients/billing-model/prisma/schema.prisma",
+    "p-generate:billing": "yarn prisma generate --schema libs/prisma-clients/billing-model/prisma/schema.prisma",
+    "p-migrate:dev:auth": "yarn prisma migrate dev --schema libs/prisma-clients/auth-model/prisma/schema.prisma",
+    "p-generate:auth": "yarn prisma generate --schema libs/prisma-clients/auth-model/prisma/schema.prisma"
   },
   "private": true,
   "dependencies": {
