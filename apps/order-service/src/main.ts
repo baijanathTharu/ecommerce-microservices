@@ -1,26 +1,21 @@
 import Fastify from 'fastify';
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import { registerRoutes } from './app/routes';
 
 const PORT = parseInt(process.env.ORDER_SERVICE_PORT) || 3001;
 
-const fastify = Fastify({
+const server = Fastify({
+  ajv: {
+    customOptions: {
+      strict: 'log',
+      keywords: ['kind', 'modifier'],
+    },
+  },
   logger: {
     level: 'info',
   },
-});
+}).withTypeProvider<TypeBoxTypeProvider>();
 
-fastify.get('/', async (request, reply) => {
-  return { hello: 'world' };
-});
+registerRoutes(server);
 
-/**
- * Run the server!
- */
-const start = async () => {
-  try {
-    await fastify.listen({ port: PORT });
-  } catch (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
-};
-start();
+server.listen({ port: PORT });
