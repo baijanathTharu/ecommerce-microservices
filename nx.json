@@ -24,6 +24,5 @@
     "build": {
       "dependsOn": ["^build"]
     }
-  },
-  "defaultProject": "order-service"
+  }
 }
