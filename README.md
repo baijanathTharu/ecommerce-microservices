@@ -4,18 +4,19 @@ An example project to learn about microservices
 
 ### TODO:
 
-- [x] Add authentication
-  - [x] Authenticate the `create order` api
-  - [x] Authenticate the `order_created` event
-- [x] Create api in `billing` service to complete the payment
-- [x] Create a service to make delivery
-  - [x] The delivery service listens for `payment_made` event and then sends a notification to the customer.
-  - [x] Order service will also listen for `payment_made` event and it will update the order_status of the order to `delivered` when it occurs.
+- [ ] Add authentication
+  - [ ] Authenticate the `create order` api
+  - [ ] Authenticate the `order_created` event
+- [ ] Create api in `payment` service to complete the payment
+- [ ] Create a service to make delivery
+  - [ ] The delivery service listens for `payment_made` event and then sends a notification to the customer.
+  - [ ] Order service will also listen for `payment_made` event and it will update the order_status of the order to `delivered` when it occurs.
+  - [ ] Product service will also listen form `payment_made` event and it will update the quantity of the product when to occurs.
 - [ ] Implement `api gateway` to make the services available to the public
 
 ## Architecture
 
-![Architecture diagram](https://github.com/baijanathTharu/ecommerce-microservices/blob/main/architecture.png?raw=true)
+![Architecture diagram](https://user-images.githubusercontent.com/60652366/178525204-60c4daed-a3bb-4fd7-a5c2-24ded230a192.png?raw=true)
 
 ## Setup the project
 
@@ -62,9 +63,9 @@ An example project to learn about microservices
     ```sh
     nx run orders:serve
     ```
-  - Run the `billing` service
+  - Run the `payment` service
     ```sh
-    nx run billing:serve
+    nx run payment:serve
     ```
   - Run the `delivery` service
     ```sh
